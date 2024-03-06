@@ -10,10 +10,10 @@ app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 mysql = MySQL(app)
 
 # Función para verificar las credenciales del usuario y otros datos
-def verificar_credenciales(correo, password, name, lastname, date, city):
+def verificar_credenciales(correo, password):
     cur = mysql.connection.cursor()
-    cur.execute('SELECT * FROM usuarios WHERE correo = %s AND password = %s AND name = %s AND lastname = %s AND date = %s AND city = %s', 
-                (correo, password, name, lastname, date, city))
+    cur.execute('SELECT * FROM usuarios WHERE correo = %s AND password = %s', 
+                (correo, password))
     account = cur.fetchone()
     cur.close()
     return account
@@ -34,13 +34,10 @@ def login():
     if request.method == 'POST':
         correo = request.form.get('txtCorreo')
         password = request.form.get('txtPassword')
-        name = request.form.get('txtName')
-        lastname = request.form.get('txtLastName')
-        city = request.form.get('txtCity')
-        date = request.form.get('txtDate')
+
 
         # Verificar las credenciales del usuario y otros datos
-        account = verificar_credenciales(correo, password, name, lastname, date, city)
+        account = verificar_credenciales(correo, password)
 
         if account:
             # Si las credenciales son correctas, iniciar sesión y redirigir al panel de administración
